@@ -4,6 +4,6 @@
 2. Create a new branch and name it `feature-xxxx`, e.g. `git checkout -b feature-sharks`
 3. Copy the following files from `Unturned/Unturned_Data/Managed/` to `unturned-lib`: Assembly-CSharp.dll, Assembly-CSharp-firstpass.dll, UnityEngine.dll
 4. Do your modifications
-5. Test it
+5. Build as release and copy the content of Community-Module/bin/Release to your Unturned/Modules/Community directory. Start Unturned without Battleye and test it. 
 6. Commit the changes and push them to your repo
 7. Create a pull request from your branch to the `mod` branch of the official repo 
