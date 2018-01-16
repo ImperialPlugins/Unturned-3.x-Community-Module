@@ -1,7 +1,7 @@
 # Setup
 
 1. Clone the repo files into Unturned/Modules/Community.
-2. Copy Unturned_Data/Managed/Assembly-CSharp.dll, Unturned_Data/Managed/Assembly-CSharp-firstpass.dll and (Your Unity Install Folder)/Editor/Data/Managed/UnityEngine.dll to lib/
+2. Copy the following files from `Unturned/Unturned_Data/Managed/` to `unturned-lib`: Assembly-CSharp.dll, Assembly-CSharp-firstpass.dll, UnityEngine.dll
 3. Set the build output path to the Community folder.
 
 # Contributing
