@@ -10,6 +10,3 @@ obj/
 # Compiled files
 #*.dll
 *.pdb
-
-# Community.csproj has references to the local Unity and Unturned install paths, so it can't be included.
-*.csproj
