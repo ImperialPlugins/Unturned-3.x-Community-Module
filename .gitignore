@@ -8,5 +8,5 @@ bin/
 obj/
 
 # Compiled files
-#*.dll
+*.dll
 *.pdb
