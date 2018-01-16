@@ -1,7 +1,7 @@
 using SDG.Framework.Modules;
 using UnityEngine;
 
-namespace UnturnedCommunity
+namespace SDG.Unturned.Community
 {
     public class CommunityNexus : IModuleNexus
     {
