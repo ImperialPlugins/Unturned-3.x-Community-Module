@@ -18,6 +18,10 @@
 		{
 			"Path": "/Community.dll",
 			"Role": "Both_Required"
+		},
+		{
+			"Path": "/lib/0Harmony.dll",
+			"Role": "Both_Required"
 		}
 	]
 }
