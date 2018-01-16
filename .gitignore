@@ -1,0 +1,15 @@
+# Properties/AssemblyInfo.cs is the library configuration so it's fine to include.
+
+# Visual Studio local files
+.vs/
+
+# Default compilation folders
+bin/
+obj/
+
+# Compiled files
+*.dll
+*.pdb
+
+# Community.csproj has references to the local Unity and Unturned install paths, so it can't be included.
+*.csproj
