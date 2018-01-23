@@ -20,7 +20,11 @@
 			"Role": "Both_Required"
 		},
 		{
-			"Path": "/lib/0Harmony.dll",
+			"Path": "/0Harmony.dll",
+			"Role": "Both_Required"
+		},
+		{
+			"Path": "/NAudio.dll",
 			"Role": "Both_Required"
 		}
 	]

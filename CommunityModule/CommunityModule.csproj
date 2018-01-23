@@ -45,7 +45,10 @@
     </Win32Resource>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Audio\AudioComponent.cs" />
     <Compile Include="CommunityNexus.cs" />
+    <Compile Include="Components\Audio\QueuedAudio.cs" />
+    <Compile Include="Components\ModuleComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -55,6 +58,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\unturned-lib\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine">
@@ -67,6 +73,10 @@
       <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Name>Harmony</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
