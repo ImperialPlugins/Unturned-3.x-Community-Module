@@ -16,7 +16,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		private Thread _networkThread;
 		private EventWaitHandle _eventHandle;
 
-		private List<QueuedAudio> _scheduled = new List<QueuedAudio>();
+		private readonly List<QueuedAudio> _queuedAudio = new List<QueuedAudio>();
 
 		public override void OnInitialize()
 		{
@@ -39,7 +39,7 @@ namespace SDG.Unturned.Community.Components.Audio
 			while (_run)
 			{
 				_eventHandle.WaitOne();
-				var item = _scheduled.First();
+				var item = _queuedAudio.First();
 				PlayMp3FromUrl(item.Url, item.PlaybackId);
 			}
 		}
@@ -82,11 +82,11 @@ namespace SDG.Unturned.Community.Components.Audio
 				return;
 
 			if (!_waveOuts.ContainsKey(playbackId)
-				&& (_waveOuts.Count + _scheduled.Count(c => !_waveOuts.ContainsKey(c.PlaybackId)))
+				&& (_waveOuts.Count + _queuedAudio.Count(c => !_waveOuts.ContainsKey(c.PlaybackId)))
 					> MAX_WAVEOUTS_PER_SERVER)
 				return;
 
-			_scheduled.Add(new QueuedAudio(url, playbackId));
+			_queuedAudio.Add(new QueuedAudio(url, playbackId));
 			_eventHandle.Set();
 		}
 

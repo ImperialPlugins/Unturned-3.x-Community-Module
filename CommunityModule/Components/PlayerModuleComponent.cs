@@ -1,13 +1,15 @@
-using UnityEngine;
+using System.Diagnostics;
 
 namespace SDG.Unturned.Community.Components
 {
-	public abstract class ModuleComponent : SteamCaller
+	public abstract class PlayerModuleComponent : PlayerCaller
 	{
 		public SteamChannel Channel => GetComponent<SteamChannel>();
+		public Player Player => GetComponent<Player>();
+
 		public virtual void OnInitialize()
 		{
-			Channel.build();
+
 		}
 
 		public virtual void OnShutdown()
@@ -18,13 +20,12 @@ namespace SDG.Unturned.Community.Components
 		public void Awake()
 		{
 			_channel = Channel;
-			Debug.Log("Initializing: " + GetType().Name);
+			_player = Player;
 			OnInitialize();
 		}
 
 		public void OnDestroy()
 		{
-			Debug.Log("Shutting down: " + GetType().Name);
 			OnShutdown();
 		}
 	}

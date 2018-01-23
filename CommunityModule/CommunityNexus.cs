@@ -15,6 +15,10 @@ namespace SDG.Unturned.Community
 		public void initialize()
 		{
 			_moduleComponentsObject = new GameObject();
+			var ch = _moduleComponentsObject.AddComponent<SteamChannel>();
+			ch.id = Provider.channels;
+			ch.setup();
+
 			foreach (var type in GetType().Assembly.GetTypes())
 			{
 				if (!typeof(ModuleComponent).IsAssignableFrom(type)) continue;
@@ -22,10 +26,22 @@ namespace SDG.Unturned.Community
 				_featureComponents.Add(obj);
 			}
 
+			ch.build();
+			Player.onPlayerCreated += OnPlayerCreated;
+			
 			Debug.Log("Community Module initialization completed");
 		}
 
-		public void shutdown()
+	    private void OnPlayerCreated(Player player)
+	    {
+		    foreach (var type in GetType().Assembly.GetTypes())
+		    {
+			    if (!typeof(PlayerModuleComponent).IsAssignableFrom(type)) continue;
+			    player.gameObject.AddComponent(type);
+		    }
+		}
+
+	    public void shutdown()
 		{
 			foreach (var comp in _featureComponents)
 				UnityEngine.Object.Destroy(comp);

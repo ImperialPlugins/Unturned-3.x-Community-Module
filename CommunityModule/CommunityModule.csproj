@@ -49,6 +49,7 @@
     <Compile Include="CommunityNexus.cs" />
     <Compile Include="Components\Audio\QueuedAudio.cs" />
     <Compile Include="Components\ModuleComponent.cs" />
+    <Compile Include="Components\PlayerModuleComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
