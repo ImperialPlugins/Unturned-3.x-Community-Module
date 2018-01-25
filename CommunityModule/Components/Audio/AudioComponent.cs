@@ -50,6 +50,9 @@ namespace SDG.Unturned.Community.Components.Audio
 				var item = _queuedAudio.First();
 
 				var obj = StreamComponent.Create(this, item.Url);
+				if(!item.AutoStart)
+					obj.GetComponent<StreamComponent>().Pause();
+
 				_streams.Add(item.PlaybackId, obj);
 			}
 		}
@@ -76,7 +79,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		[SteamCall]
-		public void PlayAudio(CSteamID sender, string url, int playbackId, bool isStream)
+		public void PlayAudio(CSteamID sender, string url, int playbackId, bool isStream, bool autoStart)
 		{
 			if (!Channel.checkServer(sender))
 				return;
@@ -86,7 +89,7 @@ namespace SDG.Unturned.Community.Components.Audio
 			    > MAX_CONCURRENT_STREAMS_PER_SERVER)
 				return;
 
-			_queuedAudio.Add(new QueuedAudio(url, playbackId));
+			_queuedAudio.Add(new QueuedAudio(url, playbackId, isStream, autoStart));
 			_eventHandle.Set();
 		}
 

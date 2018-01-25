@@ -4,7 +4,7 @@ namespace SDG.Unturned.Community.Components.Audio
 {
 	public class StreamComponent : MonoBehaviour
 	{
-		public AudioSource Audio;
+		public AudioSource Audio => GetComponent<AudioSource>();
 		public string Url;
 		public int Interval = 30;
 		public AudioComponent AudioComponent;
@@ -28,8 +28,6 @@ namespace SDG.Unturned.Community.Components.Audio
 		
 		private void Start()
 		{
-			Audio = GetComponent<AudioSource>();
-
 			_clip = null;
 			_played = false;
 			_timer = 0;
