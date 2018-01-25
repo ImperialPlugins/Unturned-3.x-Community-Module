@@ -76,7 +76,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		[SteamCall]
-		public void SetVolume(CSteamID sender, int playbackId, float volume)
+		public void SetAudioVolume(CSteamID sender, int playbackId, float volume)
 		{
 			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
