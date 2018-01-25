@@ -76,27 +76,27 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		[SteamCall]
+		public void PlayAudio(CSteamID sender, string url, int playbackId, bool isStream)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			if (!_streams.ContainsKey(playbackId)
+			    && (_streams.Count + _queuedAudio.Count(c => !_streams.ContainsKey(c.PlaybackId)))
+			    > MAX_CONCURRENT_STREAMS_PER_SERVER)
+				return;
+
+			_queuedAudio.Add(new QueuedAudio(url, playbackId));
+			_eventHandle.Set();
+		}
+
+		[SteamCall]
 		public void SetAudioVolume(CSteamID sender, int playbackId, float volume)
 		{
 			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
 
 			GetStream(playbackId).Audio.volume = volume;
-		}
-
-		[SteamCall]
-		public void PlayAudio(CSteamID sender, string url, int playbackId)
-		{
-			if (!Channel.checkServer(sender))
-				return;
-
-			if (!_streams.ContainsKey(playbackId)
-				&& (_streams.Count + _queuedAudio.Count(c => !_streams.ContainsKey(c.PlaybackId)))
-					> MAX_CONCURRENT_STREAMS_PER_SERVER)
-				return;
-
-			_queuedAudio.Add(new QueuedAudio(url, playbackId));
-			_eventHandle.Set();
 		}
 
 		[SteamCall]
