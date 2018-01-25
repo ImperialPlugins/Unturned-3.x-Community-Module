@@ -7,7 +7,7 @@ namespace SDG.Unturned.Community.Components
 		public SteamChannel Channel => GetComponent<SteamChannel>();
 		public virtual void OnInitialize()
 		{
-			Channel.build();
+
 		}
 
 		public virtual void OnShutdown()
