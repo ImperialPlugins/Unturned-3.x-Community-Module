@@ -3,20 +3,28 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using NAudio.Wave;
 using Steamworks;
+using UnityEngine;
+using ThreadPriority = System.Threading.ThreadPriority;
 
 namespace SDG.Unturned.Community.Components.Audio
 {
 	public class AudioComponent : ModuleComponent
 	{
-		public const int MAX_WAVEOUTS_PER_SERVER = 5;
-		private readonly Dictionary<int, WaveOut> _waveOuts = new Dictionary<int, WaveOut>();
+		public const int MAX_CONCURRENT_STREAMS_PER_SERVER = 5;
+		private readonly Dictionary<int, GameObject> _streams = new Dictionary<int, GameObject>();
 		private bool _run = true;
 		private Thread _networkThread;
 		private EventWaitHandle _eventHandle;
 
 		private readonly List<QueuedAudio> _queuedAudio = new List<QueuedAudio>();
+
+		public StreamComponent GetStream(int playbackId)
+		{
+			if (!_streams.ContainsKey(playbackId))
+				return null;
+			return _streams[playbackId].GetComponent<StreamComponent>();
+		}
 
 		public override void OnInitialize()
 		{
@@ -40,7 +48,9 @@ namespace SDG.Unturned.Community.Components.Audio
 			{
 				_eventHandle.WaitOne();
 				var item = _queuedAudio.First();
-				PlayMp3FromUrl(item.Url, item.PlaybackId);
+
+				var obj = StreamComponent.Create(this, item.Url);
+				_streams.Add(item.PlaybackId, obj);
 			}
 		}
 
@@ -57,22 +67,21 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		private void DisposeAll()
 		{
-			foreach (var waveOut in _waveOuts.Values)
+			foreach (var playbackId in _streams.Keys)
 			{
-				waveOut.Stop();
-				waveOut.Dispose();
+				StopAndDispose(playbackId);
 			}
 
-			_waveOuts.Clear();
+			_streams.Clear();
 		}
 
 		[SteamCall]
 		public void SetVolume(CSteamID sender, int playbackId, float volume)
 		{
-			if (!Channel.checkServer(sender) || !_waveOuts.ContainsKey(playbackId))
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
 
-			_waveOuts[playbackId].Volume = volume;
+			GetStream(playbackId).Audio.volume = volume;
 		}
 
 		[SteamCall]
@@ -81,9 +90,9 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!Channel.checkServer(sender))
 				return;
 
-			if (!_waveOuts.ContainsKey(playbackId)
-				&& (_waveOuts.Count + _queuedAudio.Count(c => !_waveOuts.ContainsKey(c.PlaybackId)))
-					> MAX_WAVEOUTS_PER_SERVER)
+			if (!_streams.ContainsKey(playbackId)
+				&& (_streams.Count + _queuedAudio.Count(c => !_streams.ContainsKey(c.PlaybackId)))
+					> MAX_CONCURRENT_STREAMS_PER_SERVER)
 				return;
 
 			_queuedAudio.Add(new QueuedAudio(url, playbackId));
@@ -91,87 +100,125 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		[SteamCall]
-		public void ResumeAudio(CSteamID sender, int playbackId)
+		public void AttachAudioToPlayer(CSteamID sender, int playbackId, CSteamID target)
 		{
-			if (!Channel.checkServer(sender) || !_waveOuts.ContainsKey(playbackId))
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
 
-			_waveOuts[playbackId].Resume();
+			var obj = _streams[playbackId];
+			var player = Provider.clients.FirstOrDefault(c => c.playerID.steamID == target);
+			if (player == null)
+				return;
+
+			obj.transform.SetParent(player.player.transform, false);
+			obj.transform.localPosition = Vector3.zero;
+		}
+
+		[SteamCall]
+		public void AttachAudioToVehicle(CSteamID sender, int playbackId, uint vehId)
+		{
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
+				return;
+
+			var obj = _streams[playbackId];
+
+			var veh = VehicleManager.vehicles.FirstOrDefault(c => c.instanceID == vehId);
+			if (veh == null)
+				return;
+
+			obj.transform.SetParent(veh.transform, false);
+			obj.transform.localPosition = Vector3.zero;
+		}
+
+		[SteamCall]
+		public void DeattachAudio(CSteamID sender, int playbackId)
+		{
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
+				return;
+
+			var obj = _streams[playbackId];
+			obj.transform.SetParent(null);
+		}
+
+		[SteamCall]
+		public void SetAudioPosition(CSteamID sender, int playbackId, Vector3 pos)
+		{
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
+				return;
+
+			var transf = _streams[playbackId].transform;
+			if (transf.parent != null)
+				transf.localPosition = pos;
+			else
+				transf.position = pos;
+		}
+
+		[SteamCall]
+		public void SetAudioMaxDistance(CSteamID sender, int playbackId, float maxDistance)
+		{
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
+				return;
+
+			GetStream(playbackId).Audio.maxDistance = maxDistance;
+		}
+
+		[SteamCall]
+		public void SetAudioMinDistance(CSteamID sender, int playbackId, float minDistance)
+		{
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
+				return;
+
+			GetStream(playbackId).Audio.minDistance = minDistance;
+		}
+
+		[SteamCall]
+		public void ResumeAudio(CSteamID sender, int playbackId)
+		{
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
+				return;
+
+			GetStream(playbackId).Resume();
 		}
 
 		[SteamCall]
 		public void PauseAudio(CSteamID sender, int playbackId)
 		{
-			if (!Channel.checkServer(sender) || !_waveOuts.ContainsKey(playbackId))
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
 
-			_waveOuts[playbackId].Pause();
+			GetStream(playbackId).Pause();
 		}
 
+		/*
 		[SteamCall]
 		public void StopAudio(CSteamID sender, int playbackId)
 		{
-			if (!Channel.checkServer(sender) || !_waveOuts.ContainsKey(playbackId))
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
 
-			_waveOuts[playbackId].Stop();
+			GetStream(playbackId).Stop();
 		}
-
+		*/
 
 		[SteamCall]
 		public void RemoveAudio(CSteamID sender, int playbackId)
 		{
-			if (!Channel.checkServer(sender) || !_waveOuts.ContainsKey(playbackId))
+			if (!Channel.checkServer(sender) || !_streams.ContainsKey(playbackId))
 				return;
 
-			_waveOuts[playbackId].Stop();
-			_waveOuts[playbackId].Dispose();
-			_waveOuts.Remove(playbackId);
+			StopAndDispose(playbackId, true);
 		}
 
-		private void PlayMp3FromUrl(string url, int playbackId)
+		private void StopAndDispose(int playbackId, bool remove = false)
 		{
-			try
-			{
-				using (Stream ms = new MemoryStream())
-				{
-					using (Stream stream = WebRequest.Create(url)
-						.GetResponse().GetResponseStream())
-					{
-						byte[] buffer = new byte[32768];
-						int read;
+			if (!_streams.ContainsKey(playbackId))
+				return;
 
-						while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-						{
-							ms.Write(buffer, 0, read);
-						}
-					}
+			GetStream(playbackId).Dispose();
+			Destroy(_streams[playbackId]);
 
-					ms.Position = 0;
-					using (WaveStream blockAlignedStream =
-						new BlockAlignReductionStream(
-							WaveFormatConversionStream.CreatePcmStream(
-								new Mp3FileReader(ms))))
-					{
-						if (!_waveOuts.ContainsKey(playbackId))
-						{
-							_waveOuts.Add(playbackId, new WaveOut(WaveCallbackInfo.FunctionCallback()));
-						}
-
-						WaveOut waveOut = _waveOuts[playbackId];
-						waveOut.Init(blockAlignedStream);
-						waveOut.Play();
-					}
-				}
-			}
-			catch
-			{
-				if (_waveOuts.ContainsKey(playbackId))
-				{
-					_waveOuts[playbackId].Dispose();
-					_waveOuts.Remove(playbackId);
-				}
-			}
+			if (remove)
+				_streams.Remove(playbackId);
 		}
 	}
 }

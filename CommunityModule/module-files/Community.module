@@ -22,10 +22,6 @@
 		{
 			"Path": "/0Harmony.dll",
 			"Role": "Both_Required"
-		},
-		{
-			"Path": "/NAudio.dll",
-			"Role": "Both_Required"
 		}
 	]
 }
