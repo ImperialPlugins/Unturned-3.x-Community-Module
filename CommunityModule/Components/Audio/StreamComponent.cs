@@ -6,7 +6,7 @@ namespace SDG.Unturned.Community.Components.Audio
 	{
 		public AudioSource Audio => GetComponent<AudioSource>();
 		public string Url;
-		public int Interval = 30;
+		public int Interval = 300;
 		public AudioComponent AudioComponent;
 
 		private AudioClip _clip;

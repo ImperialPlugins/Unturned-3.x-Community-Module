@@ -5,6 +5,7 @@ using SDG.Framework.Modules;
 using SDG.Unturned.Community.Components;
 using SDG.Unturned.Community.Components.Audio;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SDG.Unturned.Community
 {
@@ -17,25 +18,42 @@ namespace SDG.Unturned.Community
 		{
 			_moduleComponentsObject = new GameObject();
 
-			var ch = _moduleComponentsObject.GetComponent<SteamChannel>();
-			if (!ch)
+			Object.DontDestroyOnLoad(_moduleComponentsObject);
+
+			Channel = _moduleComponentsObject.GetComponent<SteamChannel>();
+			if (!Channel)
 			{
-				ch = _moduleComponentsObject.AddComponent<SteamChannel>();
-				ch.id = Provider.channels;
-				ch.setup();
+				Channel = _moduleComponentsObject.AddComponent<SteamChannel>();
+				Object.DontDestroyOnLoad(Channel);
+				Channel.id = Provider.channels;
+				Channel.setup();
 			}
 
 			foreach (var type in GetType().Assembly.GetTypes())
 			{
 				if (!typeof(ModuleComponent).IsAssignableFrom(type)) continue;
-				var obj = (ModuleComponent)_moduleComponentsObject.AddComponent(type);
-				_featureComponents.Add(obj);
+				var comp = (ModuleComponent)_moduleComponentsObject.AddComponent(type);
+				_featureComponents.Add(comp);
+				Object.DontDestroyOnLoad(comp);
 			}
 
-			ch.build();
+			Channel.build();
 			Player.onPlayerCreated += OnPlayerCreated;
+			Provider.onEnemyConnected += OnEnemyConnected;
+			Debug.Log("Community Module initialization completed at ch: #" + Channel.id);
+		}
 
-			Debug.Log("Community Module initialization completed at ch: #" + ch.id);
+		public SteamChannel Channel { get; set; }
+
+		private void OnEnemyConnected(SteamPlayer player)
+		{
+#if DEBUG
+			Debug.Log("OnEnemyConnected");
+			Channel.send(nameof(AudioComponent.PlayAudio),
+					player.playerID.steamID,
+					ESteamPacket.UPDATE_RELIABLE_BUFFER,
+				   "http://st01.dlf.de/dlf/01/33/ogg/stream.ogg", 1, false, true);
+#endif
 		}
 
 		private void OnPlayerCreated(Player player)
@@ -45,9 +63,6 @@ namespace SDG.Unturned.Community
 				if (!typeof(PlayerModuleComponent).IsAssignableFrom(type)) continue;
 				player.gameObject.AddComponent(type);
 			}
-
-
-			//_moduleComponentsObject.GetComponent<SteamChannel>().send(nameof(AudioComponent.PlayAudio), player.channel.owner.playerID.steamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, "https://archive.org/download/testmp3testfile/mpthreetest.mp3", 1);
 		}
 
 		public void shutdown()
