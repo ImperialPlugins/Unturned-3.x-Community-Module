@@ -1,0 +1,27 @@
+{
+	"IsEnabled": true,
+	"Name": "Community",
+	"Version": "1.0.1.0",
+	"Dependencies":
+	[
+		{
+			"Name": "Framework",
+			"Version": "3.23.3.2"
+		},
+		{
+			"Name": "Unturned",
+			"Version": "3.23.3.2"
+		}
+	],
+	"Assemblies":
+	[
+		{
+			"Path": "/lib/0Harmony.dll",
+			"Role": "Both_Required"
+		},
+		{
+			"Path": "/CommunityModule.dll",
+			"Role": "Both_Required"
+		}
+	]
+}
