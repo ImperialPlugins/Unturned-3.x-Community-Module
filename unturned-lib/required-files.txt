@@ -1,4 +1,0 @@
-You need to copy the following files from "Unturned/Unturned_Data/Managed" to here:
-Assembly-CSharp.dll
-Assembly-CSharp-firstpass.dll
-UnityEngine.dll
