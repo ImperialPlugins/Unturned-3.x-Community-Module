@@ -1,7 +1,7 @@
 {
 	"IsEnabled": true,
 	"Name": "Community",
-	"Version": "1.0.1.0",
+	"Version": "1.0.0.0",
 	"Dependencies":
 	[
 		{
@@ -16,7 +16,7 @@
 	"Assemblies":
 	[
 		{
-			"Path": "/lib/0Harmony.dll",
+			"Path": "/0Harmony.dll",
 			"Role": "Both_Required"
 		},
 		{
