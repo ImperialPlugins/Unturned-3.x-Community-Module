@@ -16,11 +16,15 @@
 	"Assemblies":
 	[
 		{
-			"Path": "/CommunityModule.dll",
+			"Path": "/0Harmony.dll",
 			"Role": "Both_Required"
 		},
 		{
+<<<<<<< HEAD
 			"Path": "/0Harmony.dll",
+=======
+			"Path": "/CommunityModule.dll",
+>>>>>>> upstream/mod
 			"Role": "Both_Required"
 		}
 	]
