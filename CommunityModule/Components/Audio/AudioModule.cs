@@ -79,7 +79,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="isStream">Download the audio or stream it?</param>
 		/// <param name="autoStart">Automatically start playing?</param>
 		/// <returns>the associated handle</returns>
-		public AudioHandle PlayAudio(CSteamID target, string url, bool isStream, bool autoStart = true)
+		public AudioHandle Play(CSteamID target, string url, bool isStream, bool autoStart = true)
 		{
 			LastPlaybackHandle++;
 			Channel.send(nameof(PlayAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, url, (int)LastPlaybackHandle, isStream, autoStart);
@@ -94,7 +94,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="isStream">Download the audio or stream it?</param>
 		/// <param name="autoStart">Automatically start playing?</param>
 		/// <returns>the associated audio handle</returns>
-		public AudioHandle PlayAudio(ESteamCall target, string url, bool isStream, bool autoStart = true)
+		public AudioHandle Play(ESteamCall target, string url, bool isStream, bool autoStart = true)
 		{
 			LastPlaybackHandle++;
 			Channel.send(nameof(PlayAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, url, (int)LastPlaybackHandle, isStream, autoStart);
@@ -119,7 +119,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="volume">The volume to set</param>
-		public void SetAudioVolume(CSteamID target, AudioHandle handle, float volume)
+		public void SetVolume(CSteamID target, AudioHandle handle, float volume)
 		{
 			channel.send(nameof(SetAudioVolume), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, volume);
 		}
@@ -130,7 +130,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="volume">The volume to set</param>
-		public void SetAudioVolume(ESteamCall target, AudioHandle handle, float volume)
+		public void SetVolume(ESteamCall target, AudioHandle handle, float volume)
 		{
 			channel.send(nameof(SetAudioVolume), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, volume);
 		}
@@ -154,7 +154,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetPlayer">The player to attach to</param>
-		public void AttachAudioToPlayer(CSteamID target, AudioHandle handle, SteamPlayer targetPlayer)
+		public void AttachToPlayer(CSteamID target, AudioHandle handle, SteamPlayer targetPlayer)
 		{
 			channel.send(nameof(AttachAudioToPlayer), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetPlayer.playerID.steamID);
 		}
@@ -165,7 +165,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetPlayer">The player to attach to</param>
-		public void AttachAudioToPlayer(ESteamCall target, AudioHandle handle, SteamPlayer targetPlayer)
+		public void AttachToPlayer(ESteamCall target, AudioHandle handle, SteamPlayer targetPlayer)
 		{
 			channel.send(nameof(AttachAudioToPlayer), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetPlayer.playerID.steamID);
 		}
@@ -194,7 +194,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetVehicle">The id of the vehicle to attach to</param>
-		public void AttachAudioToVehicle(CSteamID target, AudioHandle handle, InteractableVehicle targetVehicle)
+		public void AttachToVehicle(CSteamID target, AudioHandle handle, InteractableVehicle targetVehicle)
 		{
 			channel.send(nameof(AttachAudioToVehicle), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetVehicle.instanceID);
 		}
@@ -205,7 +205,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetVehicle">The id of the vehicle to attach to</param>
-		public void AttachAudioToVehicle(ESteamCall target, AudioHandle handle, InteractableVehicle targetVehicle)
+		public void AttachToVehicle(ESteamCall target, AudioHandle handle, InteractableVehicle targetVehicle)
 		{
 			channel.send(nameof(AttachAudioToVehicle), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetVehicle.instanceID);
 		}
@@ -233,7 +233,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void DeattachAudio(CSteamID target, AudioHandle handle)
+		public void Deattach(CSteamID target, AudioHandle handle)
 		{
 			channel.send(nameof(DeattachAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -243,7 +243,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void DeattachAudio(ESteamCall target, AudioHandle handle)
+		public void Deattach(ESteamCall target, AudioHandle handle)
 		{
 			channel.send(nameof(DeattachAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -268,7 +268,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="pos">The target position (local if attached; global if not)</param>
-		public void SetAudioPosition(CSteamID target, AudioHandle handle, Vector3 pos)
+		public void SetPosition(CSteamID target, AudioHandle handle, Vector3 pos)
 		{
 			channel.send(nameof(SetAudioPosition), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, pos);
 		}
@@ -279,7 +279,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="pos">The target position (local if attached; global if not)</param>
-		public void SetAudioPosition(ESteamCall target, AudioHandle handle, Vector3 pos)
+		public void SetPosition(ESteamCall target, AudioHandle handle, Vector3 pos)
 		{
 			channel.send(nameof(SetAudioPosition), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, pos);
 		}
@@ -307,7 +307,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="maxDistance">The max distance of the audio</param>
-		public void SetAudioMaxDistance(CSteamID target, AudioHandle handle, float maxDistance)
+		public void SetMaxDistance(CSteamID target, AudioHandle handle, float maxDistance)
 		{
 			channel.send(nameof(SetAudioMaxDistance), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, maxDistance);
 		}
@@ -318,7 +318,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="maxDistance">The max distance of the audio</param>
-		public void SetAudioMaxDistance(ESteamCall target, AudioHandle handle, float maxDistance)
+		public void SetMaxDistance(ESteamCall target, AudioHandle handle, float maxDistance)
 		{
 			channel.send(nameof(SetAudioMaxDistance), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, maxDistance);
 		}
@@ -342,7 +342,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="minDistance">The max distance of the audio</param>
-		public void SetAudioMinDistance(CSteamID target, AudioHandle handle, float minDistance)
+		public void SetMinDistance(CSteamID target, AudioHandle handle, float minDistance)
 		{
 			channel.send(nameof(SetAudioMinDistance), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, minDistance);
 		}
@@ -353,7 +353,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="minDistance">The max distance of the audio</param>
-		public void SetAudioMinDistance(ESteamCall target, AudioHandle handle, float minDistance)
+		public void SetMinDistance(ESteamCall target, AudioHandle handle, float minDistance)
 		{
 			channel.send(nameof(SetAudioMinDistance), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, minDistance);
 		}
@@ -376,7 +376,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void ResumeAudio(CSteamID target, AudioHandle handle)
+		public void Resume(CSteamID target, AudioHandle handle)
 		{
 			channel.send(nameof(ResumeAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -386,7 +386,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void ResumeAudio(ESteamCall target, AudioHandle handle)
+		public void Resume(ESteamCall target, AudioHandle handle)
 		{
 			channel.send(nameof(ResumeAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -412,7 +412,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void PauseAudio(CSteamID target, AudioHandle handle)
+		public void Pause(CSteamID target, AudioHandle handle)
 		{
 			channel.send(nameof(PauseAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -422,7 +422,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void PauseAudio(ESteamCall target, AudioHandle handle)
+		public void Pause(ESteamCall target, AudioHandle handle)
 		{
 			channel.send(nameof(PauseAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -440,23 +440,12 @@ namespace SDG.Unturned.Community.Components.Audio
 			audio.Pause();
 		}
 
-		/*
-		[SteamCall]
-		public void StopAudio(CSteamID sender, int handle)
-		{
-			if (!Channel.checkServer(sender) || !StreamExists(handle))
-				return;
-
-			GetAudio(handle).Stop();
-		}
-		*/
-
 		/// <summary>
 		/// Destroys an audio to free resources 
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void DestroyAudio(CSteamID target, AudioHandle handle)
+		public void Destroy(CSteamID target, AudioHandle handle)
 		{
 			channel.send(nameof(DestroyAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -466,7 +455,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
-		public void DestroyAudio(ESteamCall target, AudioHandle handle)
+		public void Destroy(ESteamCall target, AudioHandle handle)
 		{
 			channel.send(nameof(DestroyAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle);
 		}
@@ -478,6 +467,41 @@ namespace SDG.Unturned.Community.Components.Audio
 				return;
 
 			StopAndDispose(playbackId, true);
+		}
+
+		/// <summary>
+		/// Sets if an audio should loop
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="loop">Loop audio?</param>
+		public void SetLoop(CSteamID target, AudioHandle handle, bool loop)
+		{
+			channel.send(nameof(SetLoopAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, loop);
+		}
+
+		/// <summary>
+		/// Sets if an audio should loop
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="loop">Loop audio?</param>
+		public void SetLoop(ESteamCall target, AudioHandle handle, bool loop)
+		{
+			channel.send(nameof(SetLoopAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, loop);
+		}
+
+		[SteamCall]
+		private void SetLoopAudio(CSteamID sender, int playbackId, bool loop)
+		{
+			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+				return;
+
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			audio.Audio.loop = loop;
 		}
 
 		private void StopAndDispose(AudioHandle handle, bool remove = false)

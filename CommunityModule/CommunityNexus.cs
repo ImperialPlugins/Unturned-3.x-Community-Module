@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using SDG.Framework.Modules;
 using SDG.Unturned.Community.Components;
-using SDG.Unturned.Community.Components.Audio;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -41,22 +38,10 @@ namespace SDG.Unturned.Community
 
 			Channel.build();
 			Player.onPlayerCreated += OnPlayerCreated;
-			Provider.onEnemyConnected += OnEnemyConnected;
 			Debug.Log("Community Module initialization completed at ch: #" + Channel.id);
 		}
 
 		public SteamChannel Channel { get; set; }
-
-		private void OnEnemyConnected(SteamPlayer player)
-		{
-#if DEBUG
-			Debug.Log("OnEnemyConnected");
-			Channel.send(nameof(AudioModule.PlayAudio),
-					player.playerID.steamID,
-					ESteamPacket.UPDATE_RELIABLE_BUFFER,
-				   "http://st01.dlf.de/dlf/01/33/ogg/stream.ogg", 1, true, true);
-#endif
-		}
 
 		private void OnPlayerCreated(Player player)
 		{

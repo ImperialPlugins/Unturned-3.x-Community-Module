@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace SDG.Unturned.Community.Components
 {
 	public abstract class PlayerModuleComponent : PlayerCaller

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace SDG.Unturned.Community.Components.Audio
 {
 	public class StreamableAudio
