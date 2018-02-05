@@ -461,7 +461,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		[SteamCall]
-		private void DestroyAudioSteamCall(CSteamID sender, int playbackId)
+		public void DestroyAudioSteamCall(CSteamID sender, int playbackId)
 		{
 			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
 				return;
@@ -477,7 +477,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="loop">Loop audio?</param>
 		public void SetLoop(CSteamID target, AudioHandle handle, bool loop)
 		{
-			channel.send(nameof(SetLoopAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, loop);
+			channel.send(nameof(SetLoopAudioSteamCall), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, loop);
 		}
 
 		/// <summary>
@@ -488,11 +488,11 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="loop">Loop audio?</param>
 		public void SetLoop(ESteamCall target, AudioHandle handle, bool loop)
 		{
-			channel.send(nameof(SetLoopAudio), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, loop);
+			channel.send(nameof(SetLoopAudioSteamCall), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, loop);
 		}
 
 		[SteamCall]
-		private void SetLoopAudio(CSteamID sender, int playbackId, bool loop)
+		public void SetLoopAudioSteamCall(CSteamID sender, int playbackId, bool loop)
 		{
 			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
 				return;
