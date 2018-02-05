@@ -49,10 +49,10 @@ namespace SDG.Unturned.Community
 		{
 #if DEBUG
 			Debug.Log("OnEnemyConnected");
-			Channel.send(nameof(AudioComponent.PlayAudio),
+			Channel.send(nameof(AudioModule.PlayAudio),
 					player.playerID.steamID,
 					ESteamPacket.UPDATE_RELIABLE_BUFFER,
-				   "http://st01.dlf.de/dlf/01/33/ogg/stream.ogg", 1, false, true);
+				   "http://st01.dlf.de/dlf/01/33/ogg/stream.ogg", 1, true, true);
 #endif
 		}
 

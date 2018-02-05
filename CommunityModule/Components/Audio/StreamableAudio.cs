@@ -1,8 +1,10 @@
+using UnityEngine;
+
 namespace SDG.Unturned.Community.Components.Audio
 {
-	public class QueuedAudio
+	public class StreamableAudio
 	{
-		public QueuedAudio(string url, int playbackId, bool isStream, bool autoStart)
+		public StreamableAudio(string url, int playbackId, bool isStream, bool autoStart)
 		{
 			Url = url;
 			PlaybackId = playbackId;
@@ -14,5 +16,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		public int PlaybackId { get; }
 		public bool IsStream { get; }
 		public bool AutoStart { get; }
+
+		public StreamableAudioComponent StreamableAudioComponent { get; set; }
 	}
 }

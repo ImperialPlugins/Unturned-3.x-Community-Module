@@ -2,42 +2,62 @@ using UnityEngine;
 
 namespace SDG.Unturned.Community.Components.Audio
 {
-	public class StreamComponent : MonoBehaviour
+	public class StreamableAudioComponent : MonoBehaviour
 	{
 		public AudioSource Audio => GetComponent<AudioSource>();
-		public string Url;
-		public int Interval = 300;
-		public AudioComponent AudioComponent;
+		public StreamableAudio AudioInfo { get; private set; }
+		public bool IsPlaying => Audio.isPlaying;
+
+		public int Interval = 60;
 
 		private AudioClip _clip;
 		private bool _played;
 		private WWW _www;
 		private float _timer;
-		
-		public static GameObject Create(AudioComponent audioComponent, string url)
+
+		public static StreamableAudioComponent CreateFrom(StreamableAudio audioInfo)
 		{
 			GameObject o = new GameObject();
 
 			o.AddComponent<AudioSource>();
-			StreamComponent comp = o.AddComponent<StreamComponent>();
+			StreamableAudioComponent comp = o.AddComponent<StreamableAudioComponent>();
 
-			comp.Url = url;
-			comp.AudioComponent = audioComponent;
-			return o;
+			comp.AudioInfo = audioInfo;
+			return comp;
 		}
-		
+
 		private void Start()
+		{
+			Reset();
+		}
+
+		public void Reset()
 		{
 			_clip = null;
 			_played = false;
 			_timer = 0;
+
+			if (Audio.isPlaying)
+				Audio.Stop();
 		}
 
 		private void Update()
 		{
+			if (!AudioInfo.IsStream)
+			{
+				if (_played)
+					return;
+
+				_www = new WWW(AudioInfo.Url);
+				_clip = _www.GetAudioClip(false, AudioInfo.IsStream);
+				Audio.PlayOneShot(_clip);
+				_played = true;
+				return;
+			}
+
 			_timer = _timer + 1 * Time.deltaTime; //Mathf.FloorToInt(Time.timeSinceLevelLoad*10); 
 												  //Time.frameCount; 
-			if (Url == null)
+			if (string.IsNullOrEmpty(AudioInfo.Url))
 				return;
 
 			if (_timer >= Interval)
@@ -54,14 +74,14 @@ namespace SDG.Unturned.Community.Components.Audio
 			{
 				if (_www == null)
 				{
-					_www = new WWW(Url);
+					_www = new WWW(AudioInfo.Url);
 				}
 			}
 			if (_clip == null)
 			{
 				if (_www != null)
 				{
-					_clip = _www.GetAudioClip(false, true);
+					_clip = _www.GetAudioClip(false, AudioInfo.IsStream);
 				}
 			}
 

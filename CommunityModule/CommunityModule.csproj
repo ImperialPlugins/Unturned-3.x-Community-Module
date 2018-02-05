@@ -45,10 +45,10 @@
     </Win32Resource>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Components\Audio\AudioComponent.cs" />
+    <Compile Include="Components\Audio\AudioModule.cs" />
     <Compile Include="CommunityNexus.cs" />
-    <Compile Include="Components\Audio\QueuedAudio.cs" />
-    <Compile Include="Components\Audio\StreamComponent.cs" />
+    <Compile Include="Components\Audio\StreamableAudio.cs" />
+    <Compile Include="Components\Audio\StreamableAudioComponent.cs" />
     <Compile Include="Components\ModuleComponent.cs" />
     <Compile Include="Components\PlayerModuleComponent.cs" />
   </ItemGroup>
