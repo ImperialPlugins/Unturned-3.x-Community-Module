@@ -18,6 +18,8 @@ namespace SDG.Unturned.Community.Components.Audio
 		public static StreamableAudioComponent CreateFrom(StreamableAudio audioInfo)
 		{
 			GameObject o = new GameObject();
+			if (Player.player != null)
+				o.transform.position = Player.player.transform.position;
 
 			o.AddComponent<AudioSource>();
 			StreamableAudioComponent comp = o.AddComponent<StreamableAudioComponent>();
@@ -36,7 +38,6 @@ namespace SDG.Unturned.Community.Components.Audio
 			_clip = null;
 			_played = false;
 			_timer = 0;
-
 			if (Audio.isPlaying)
 				Audio.Stop();
 		}

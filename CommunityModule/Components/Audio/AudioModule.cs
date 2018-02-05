@@ -154,9 +154,9 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetPlayer">The player to attach to</param>
-		public void AttachAudioToPlayer(CSteamID target, AudioHandle handle, CSteamID targetPlayer)
+		public void AttachAudioToPlayer(CSteamID target, AudioHandle handle, SteamPlayer targetPlayer)
 		{
-			channel.send(nameof(AttachAudioToPlayer), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetPlayer);
+			channel.send(nameof(AttachAudioToPlayer), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetPlayer.playerID.steamID);
 		}
 
 		/// <summary>
@@ -165,9 +165,9 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetPlayer">The player to attach to</param>
-		public void AttachAudioToPlayer(ESteamCall target, AudioHandle handle, CSteamID targetPlayer)
+		public void AttachAudioToPlayer(ESteamCall target, AudioHandle handle, SteamPlayer targetPlayer)
 		{
-			channel.send(nameof(AttachAudioToPlayer), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetPlayer);
+			channel.send(nameof(AttachAudioToPlayer), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetPlayer.playerID.steamID);
 		}
 
 		[SteamCall]
@@ -194,9 +194,9 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetVehicle">The id of the vehicle to attach to</param>
-		public void AttachAudioToVehicle(CSteamID target, AudioHandle handle, uint targetVehicle)
+		public void AttachAudioToVehicle(CSteamID target, AudioHandle handle, InteractableVehicle targetVehicle)
 		{
-			channel.send(nameof(AttachAudioToVehicle), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetVehicle);
+			channel.send(nameof(AttachAudioToVehicle), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetVehicle.instanceID);
 		}
 
 		/// <summary>
@@ -205,9 +205,9 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="targetVehicle">The id of the vehicle to attach to</param>
-		public void AttachAudioToVehicle(ESteamCall target, AudioHandle handle, uint targetVehicle)
+		public void AttachAudioToVehicle(ESteamCall target, AudioHandle handle, InteractableVehicle targetVehicle)
 		{
-			channel.send(nameof(AttachAudioToVehicle), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetVehicle);
+			channel.send(nameof(AttachAudioToVehicle), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, targetVehicle.instanceID);
 		}
 
 		[SteamCall]
