@@ -13,9 +13,11 @@ namespace SDG.Unturned.Community
 	{
 		private readonly List<ModuleComponent> _featureComponents = new List<ModuleComponent>();
 		private GameObject _moduleComponentsObject;
-
+		public static CommunityNexus Instance { get; private set; }
 		public void initialize()
 		{
+			Instance = this;
+
 			_moduleComponentsObject = new GameObject();
 
 			Object.DontDestroyOnLoad(_moduleComponentsObject);
@@ -68,11 +70,12 @@ namespace SDG.Unturned.Community
 		public void shutdown()
 		{
 			foreach (var comp in _featureComponents)
-				UnityEngine.Object.Destroy(comp);
+				Object.Destroy(comp);
 
-			UnityEngine.Object.Destroy(_moduleComponentsObject);
+			Object.Destroy(_moduleComponentsObject);
 
 			Debug.Log("Community Module Shutdown completed");
+			Instance = null;
 		}
 	}
 }
