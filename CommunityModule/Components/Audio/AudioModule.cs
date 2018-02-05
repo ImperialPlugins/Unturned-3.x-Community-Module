@@ -547,6 +547,5 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (isNew)
 				_audios.Add(audio);
 		}
-
 	}
 }
