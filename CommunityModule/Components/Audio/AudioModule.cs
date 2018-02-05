@@ -86,60 +86,76 @@ namespace SDG.Unturned.Community.Components.Audio
 		[SteamCall]
 		public void SetAudioVolume(CSteamID sender, int playbackId, float volume)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			GetAudio(playbackId).Audio.volume = volume;
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			audio.Audio.volume = volume;
 		}
 
 		[SteamCall]
 		public void AttachAudioToPlayer(CSteamID sender, int playbackId, CSteamID target)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			var obj = GetAudio(playbackId);
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
 			var player = Provider.clients.FirstOrDefault(c => c.playerID.steamID == target);
 			if (player == null)
 				return;
 
-			obj.transform.SetParent(player.player.transform, false);
-			obj.transform.localPosition = Vector3.zero;
+			audio.transform.SetParent(player.player.transform, false);
+			audio.transform.localPosition = Vector3.zero;
 		}
 
 		[SteamCall]
 		public void AttachAudioToVehicle(CSteamID sender, int playbackId, uint vehId)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			var obj = GetAudio(playbackId);
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
 
 			var veh = VehicleManager.vehicles.FirstOrDefault(c => c.instanceID == vehId);
 			if (veh == null)
 				return;
 
-			obj.transform.SetParent(veh.transform, false);
-			obj.transform.localPosition = Vector3.zero;
+			audio.transform.SetParent(veh.transform, false);
+			audio.transform.localPosition = Vector3.zero;
 		}
 
 		[SteamCall]
 		public void DeattachAudio(CSteamID sender, int playbackId)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			var obj = GetAudio(playbackId);
-			obj.transform.SetParent(null);
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			audio.transform.SetParent(null);
 		}
 
 		[SteamCall]
 		public void SetAudioPosition(CSteamID sender, int playbackId, Vector3 pos)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			var transf = GetAudio(playbackId).transform;
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			var transf = audio.transform;
 			if (transf.parent != null)
 				transf.localPosition = pos;
 			else
@@ -149,28 +165,39 @@ namespace SDG.Unturned.Community.Components.Audio
 		[SteamCall]
 		public void SetAudioMaxDistance(CSteamID sender, int playbackId, float maxDistance)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			GetAudio(playbackId).Audio.maxDistance = maxDistance;
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+			
+			audio.Audio.maxDistance = maxDistance;
 		}
 
 		[SteamCall]
 		public void SetAudioMinDistance(CSteamID sender, int playbackId, float minDistance)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			GetAudio(playbackId).Audio.minDistance = minDistance;
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			audio.Audio.minDistance = minDistance;
 		}
 
 		[SteamCall]
 		public void ResumeAudio(CSteamID sender, int playbackId)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
 			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
 			if (!CanPlayAudio(playbackId, audio.AudioInfo.IsStream))
 				return;
 
@@ -180,10 +207,14 @@ namespace SDG.Unturned.Community.Components.Audio
 		[SteamCall]
 		public void PauseAudio(CSteamID sender, int playbackId)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
-			GetAudio(playbackId).Pause();
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			audio.Pause();
 		}
 
 		/*
@@ -208,10 +239,10 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		private void StopAndDispose(int playbackId, bool remove = false)
 		{
-			if (!StreamExists(playbackId))
+			var stream = GetAudio(playbackId);
+			if (stream == null)
 				return;
 
-			var stream = GetAudio(playbackId);
 			stream.Dispose();
 
 			Destroy(stream.gameObject);
