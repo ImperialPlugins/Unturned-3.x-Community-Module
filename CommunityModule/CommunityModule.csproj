@@ -46,6 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Components\Audio\AudioHandle.cs" />
+    <Compile Include="Components\Audio\AudioMode.cs" />
     <Compile Include="Components\Audio\AudioModule.cs" />
     <Compile Include="CommunityNexus.cs" />
     <Compile Include="Components\Audio\StreamableAudio.cs" />

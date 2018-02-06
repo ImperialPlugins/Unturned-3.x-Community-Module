@@ -21,7 +21,12 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (Player.player != null)
 				o.transform.position = Player.player.transform.position;
 
-			o.AddComponent<AudioSource>();
+			var audioSource = o.AddComponent<AudioSource>();
+			audioSource.loop = false;
+			audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+			audioSource.dopplerLevel = 1f;
+			audioSource.spread = 0f;
+
 			StreamableAudioComponent comp = o.AddComponent<StreamableAudioComponent>();
 
 			comp.AudioInfo = audioInfo;
@@ -114,6 +119,11 @@ namespace SDG.Unturned.Community.Components.Audio
 		public void Pause()
 		{
 			Audio.Pause();
+		}
+
+		public void SetMode(AudioMode mode)
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }
