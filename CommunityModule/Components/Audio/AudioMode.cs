@@ -8,8 +8,8 @@ namespace SDG.Unturned.Community.Components.Audio
 		NonPositional,
 
 		/// <summary>
-		/// Audio which adjusts its volume according to position of AudioListener
+		/// Audio which adjusts its volume according to the 3D position of AudioListener
 		/// </summary>
-		Audio3D
+		Positional3D
 	}
 }

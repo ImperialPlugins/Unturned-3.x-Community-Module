@@ -24,8 +24,8 @@ namespace SDG.Unturned.Community.Components.Audio
 			var audioSource = o.AddComponent<AudioSource>();
 			audioSource.loop = false;
 			audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
-			audioSource.dopplerLevel = 1f;
-			audioSource.spread = 0f;
+			audioSource.priority = 0;
+			audioSource.spatialBlend = 1f;
 
 			StreamableAudioComponent comp = o.AddComponent<StreamableAudioComponent>();
 
@@ -123,7 +123,27 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		public void SetMode(AudioMode mode)
 		{
-			throw new System.NotImplementedException();
+			Audio.spatialBlend = mode == AudioMode.Positional3D ? 1f : 0f;
+		}
+
+		public void SetSpatialBlend(float blend)
+		{
+			Audio.spatialBlend = blend;
+		}
+
+		public void SetMuted(bool mute)
+		{
+			Audio.mute = mute;
+		}
+
+		public void SetSpread(float spread)
+		{
+			Audio.spread = spread;
+		}
+
+		public void SetDopplerLevel(float level)
+		{
+			Audio.dopplerLevel = level;
 		}
 	}
 }

@@ -490,7 +490,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		[SteamCall]
 		public void AudioSteamCall_SetLoop(CSteamID sender, int playbackId, bool loop)
 		{
-			if (!Channel.checkServer(sender) || !StreamExists(playbackId))
+			if (!Channel.checkServer(sender))
 				return;
 
 			var audio = GetAudio(playbackId);
@@ -535,7 +535,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="mode">The target audio mode</param>
 		public void SetMode(CSteamID target, AudioHandle handle, AudioMode mode)
 		{
-			channel.send(nameof(AudioSteamCall_SetMode), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)mode);
+			channel.send(nameof(AudioSteamCall_SetMode), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, (int)mode);
 		}
 
 		/// <summary>
@@ -546,7 +546,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="mode">The target audio mode</param>
 		public void SetMode(ESteamCall target, AudioHandle handle, AudioMode mode)
 		{
-			channel.send(nameof(AudioSteamCall_SetMode), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)mode);
+			channel.send(nameof(AudioSteamCall_SetMode), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, (int)mode);
 		}
 
 		[SteamCall]
@@ -556,6 +556,130 @@ namespace SDG.Unturned.Community.Components.Audio
 				return;
 
 			GetAudio(playbackId)?.SetMode((AudioMode) mode);
+		}
+
+		/// <summary>
+		/// Mutes or unmutes an audio
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="mute">Mute audio?</param>
+		public void SetMode(CSteamID target, AudioHandle handle, bool mute)
+		{
+			channel.send(nameof(AudioSteamCall_SetMute), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, mute);
+		}
+
+		/// <summary>
+		/// Mutes or unmutes an audio
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="mute">Mute audio?</param>
+		public void SetMode(ESteamCall target, AudioHandle handle, bool mute)
+		{
+			channel.send(nameof(AudioSteamCall_SetMute), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, mute);
+		}
+
+		[SteamCall]
+		public void AudioSteamCall_SetMute(CSteamID sender, int playbackId, bool mute)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			GetAudio(playbackId)?.SetMuted(mute);
+		}
+
+		/// <summary>
+		/// Sets how much the 3D engine has an effect on the audio source
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="blend">Spatial blend amount</param>
+		public void SetSpatialBlend(CSteamID target, AudioHandle handle, float blend)
+		{
+			channel.send(nameof(AudioSteamCall_SetSpatialBlend), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, blend);
+		}
+
+		/// <summary>
+		/// Sets how much the 3D engine has an effect on the audio source
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="blend">Spatial blend amount</param>
+		public void SetSpatialBlend(ESteamCall target, AudioHandle handle, float blend)
+		{
+			channel.send(nameof(AudioSteamCall_SetSpatialBlend), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, blend);
+		}
+
+		[SteamCall]
+		public void AudioSteamCall_SetSpatialBlend(CSteamID sender, int playbackId, float blend)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			GetAudio(playbackId)?.SetSpatialBlend(blend);
+		}
+
+		/// <summary>
+		/// Sets the spread angle to 3D stereo or multichannel sound in speaker space.
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="spread">Spread amount</param>
+		public void SetSpread(CSteamID target, AudioHandle handle, float spread)
+		{
+			channel.send(nameof(AudioSteamCall_SetSpread), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, spread);
+		}
+
+		/// <summary>
+		///	Sets the spread angle to 3D stereo or multichannel sound in speaker space.
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="spread">Spread amount</param>
+		public void SetSpread(ESteamCall target, AudioHandle handle, float spread)
+		{
+			channel.send(nameof(AudioSteamCall_SetSpread), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, spread);
+		}
+
+		[SteamCall]
+		public void AudioSteamCall_SetSpread(CSteamID sender, int playbackId, float blend)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			GetAudio(playbackId)?.SetSpatialBlend(blend);
+		}
+
+		/// <summary>
+		/// Determines how much doppler effect will be applied to this audio source (if is set to 0, then no effect is applied
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="level">Doppler level</param>
+		public void SetDopplerLevel(CSteamID target, AudioHandle handle, float level)
+		{
+			channel.send(nameof(AudioSteamCall_SetDopplerLevel), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, level);
+		}
+
+		/// <summary>
+		///	Determines how much doppler effect will be applied to this audio source (if is set to 0, then no effect is applied
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="level">Doppler level</param>
+		public void SetDopplerLevel(ESteamCall target, AudioHandle handle, float level)
+		{
+			channel.send(nameof(AudioSteamCall_SetDopplerLevel), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, level);
+		}
+
+		[SteamCall]
+		public void AudioSteamCall_SetDopplerLevel(CSteamID sender, int playbackId, float level)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			GetAudio(playbackId)?.SetDopplerLevel(level);
 		}
 
 		private void StopAndDispose(AudioHandle handle, bool remove = false)
