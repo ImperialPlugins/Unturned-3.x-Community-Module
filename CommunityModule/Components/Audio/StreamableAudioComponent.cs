@@ -145,5 +145,10 @@ namespace SDG.Unturned.Community.Components.Audio
 		{
 			Audio.dopplerLevel = level;
 		}
+
+		public void SetRolloffMode(AudioRolloffMode mode)
+		{
+			Audio.rolloffMode = mode;
+		}
 	}
 }

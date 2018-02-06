@@ -528,7 +528,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		/// <summary>
-		/// Destroys all created audio objects
+		/// Sets the audio mode
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
@@ -539,7 +539,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		}
 
 		/// <summary>
-		/// Destroys all created audio objects
+		/// Sets the audio mode
 		/// </summary>
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
@@ -680,6 +680,37 @@ namespace SDG.Unturned.Community.Components.Audio
 				return;
 
 			GetAudio(playbackId)?.SetDopplerLevel(level);
+		}
+
+		/// <summary>
+		/// Sets the audio rolloff mode. Custom is not supported.
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="mode">The target audio rolloff mode</param>
+		public void SetRolloffMode(CSteamID target, AudioHandle handle, AudioRolloffMode mode)
+		{
+			channel.send(nameof(AudioSteamCall_SetRolloffMode), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, (int)mode);
+		}
+
+		/// <summary>
+		/// Sets the audio rolloff mode. Custom is not supported.
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="mode">The target audio rolloff mode</param>
+		public void SetRolloffMode(ESteamCall target, AudioHandle handle, AudioRolloffMode mode)
+		{
+			channel.send(nameof(AudioSteamCall_SetRolloffMode), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, (int)mode);
+		}
+
+		[SteamCall]
+		public void AudioSteamCall_SetRolloffMode(CSteamID sender, int playbackId, int mode)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			GetAudio(playbackId)?.SetRolloffMode((AudioRolloffMode)mode);
 		}
 
 		private void StopAndDispose(AudioHandle handle, bool remove = false)
