@@ -110,6 +110,12 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!CanPlayAudio(playbackId, isStream))
 				return;
 
+			if (!url.StartsWith("http://"))
+				return;
+
+			if (!url.EndsWith("ogg") && !url.EndsWith("wav"))
+				return;
+
 			_queuedAudio.Enqueue(new StreamableAudio(url, playbackId, isStream, autoStart));
 		}
 
@@ -691,6 +697,41 @@ namespace SDG.Unturned.Community.Components.Audio
 			GetAudio(playbackId)?.SetRolloffMode((AudioRolloffMode)mode);
 		}
 
+		/// <summary>
+		/// Sets the interval of when the audio should refresh stream
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="interval">The interval</param>
+		public void SetInterval(CSteamID target, AudioHandle handle, float interval)
+		{
+			channel.send(nameof(AudioSteamCall_SetInterval), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, interval);
+		}
+
+		/// <summary>
+		/// Sets the interval of when the audio should refresh stream
+		/// </summary>
+		/// <param name="target">The SteamCall target</param>
+		/// <param name="handle">The audio handle</param>
+		/// <param name="interval">The interval</param>
+		public void SetInterval(ESteamCall target, AudioHandle handle, float interval)
+		{
+			channel.send(nameof(AudioSteamCall_SetInterval), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, interval);
+		}
+
+		[SteamCall]
+		public void AudioSteamCall_SetInterval(CSteamID sender, int playbackId, float interval)
+		{
+			if (!Channel.checkServer(sender))
+				return;
+
+			var audio = GetAudio(playbackId);
+			if (audio == null)
+				return;
+
+			audio.Interval = interval;
+		}
+		
 		private void StopAndDispose(AudioHandle handle, bool remove = false)
 		{
 			var stream = GetAudio(handle);

@@ -8,7 +8,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		public StreamableAudio AudioInfo { get; private set; }
 		public bool IsPlaying => Audio.isPlaying;
 
-		public int Interval = 30;
+		public float Interval { get; set; } = 30f;
 
 		private AudioClip _clip;
 		private bool _played;
@@ -40,11 +40,14 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		public void Reset()
 		{
+			if (Audio.isPlaying)
+				Audio.Stop();
+
+			_www.Dispose();
+			_www = null;
 			_clip = null;
 			_played = false;
 			_timer = 0;
-			if (Audio.isPlaying)
-				Audio.Stop();
 		}
 
 		private void Update()
@@ -55,13 +58,10 @@ namespace SDG.Unturned.Community.Components.Audio
 				return;
 
 			if (_timer >= Interval && AudioInfo.IsStream)
-			{        
+			{
 				if (_www != null)
 				{
-					_www.Dispose();
-					_www = null;
-					_played = false;
-					_timer = 0;
+					Reset();
 				}
 				return;
 			}
@@ -72,14 +72,8 @@ namespace SDG.Unturned.Community.Components.Audio
 			}
 			if (_clip == null)
 			{
-				if (_www != null)
-				{
-					_clip = _www.GetAudioClip(false, true);
-				}
+				_clip = _www.GetAudioClip(false, true);
 			}
-
-			if (_clip == null)
-				return;
 
 			if (_clip.loadState == AudioDataLoadState.Loaded && _played == false)
 			{
