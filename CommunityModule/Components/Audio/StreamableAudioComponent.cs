@@ -1,3 +1,4 @@
+using System.Security.Policy;
 using UnityEngine;
 
 namespace SDG.Unturned.Community.Components.Audio
@@ -8,7 +9,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		public StreamableAudio AudioInfo { get; private set; }
 		public bool IsPlaying => Audio.isPlaying;
 
-		public float Interval { get; set; } = 30f;
+		public float Interval { get; set; } = 60f;
 
 		private AudioClip _clip;
 		private bool _played;
@@ -28,8 +29,8 @@ namespace SDG.Unturned.Community.Components.Audio
 			audioSource.spatialBlend = 1f;
 
 			StreamableAudioComponent comp = o.AddComponent<StreamableAudioComponent>();
-
 			comp.AudioInfo = audioInfo;
+
 			return comp;
 		}
 
@@ -40,32 +41,28 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		public void Reset()
 		{
-			if (Audio.isPlaying)
-				Audio.Stop();
+			//if (Audio.isPlaying)
+			//	  Audio.Stop();
 
-			_www.Dispose();
+			_www?.Dispose();
 			_www = null;
-			_clip = null;
 			_played = false;
 			_timer = 0;
 		}
 
 		private void Update()
 		{
-			_timer = _timer + 1 * Time.deltaTime; //Mathf.FloorToInt(Time.timeSinceLevelLoad*10); 
-												  //Time.frameCount; 
 			if (string.IsNullOrEmpty(AudioInfo.Url))
 				return;
 
-			if (_timer >= Interval && AudioInfo.IsStream)
-			{
-				if (_www != null)
-				{
-					Reset();
-				}
-				return;
-			}
+			_timer = _timer + 1 * Time.deltaTime; //Mathf.FloorToInt(Time.timeSinceLevelLoad*10); 
+												  //Time.frameCount; 
 
+			if (_timer >= Interval && AudioInfo.IsStream && _www != null && _clip.loadState == AudioDataLoadState.Loaded)
+			{
+				//Audio.Stop();
+				Reset();
+			}
 			if (_www == null)
 			{
 				_www = new WWW(AudioInfo.Url);
@@ -75,12 +72,12 @@ namespace SDG.Unturned.Community.Components.Audio
 				_clip = _www.GetAudioClip(false, true);
 			}
 
-			if (_clip.loadState == AudioDataLoadState.Loaded && _played == false)
-			{
-				Audio.PlayOneShot(_clip);
-				_played = true;
-				_clip = null;
-			}
+			if (_clip.loadState != AudioDataLoadState.Loaded || _played)
+				return;
+
+			Audio.PlayOneShot(_clip);
+			_played = true;
+			_clip = null;
 		}
 
 		public void Dispose()

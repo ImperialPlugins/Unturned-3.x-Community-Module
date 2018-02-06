@@ -110,10 +110,10 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!CanPlayAudio(playbackId, isStream))
 				return;
 
-			if (!url.StartsWith("http://"))
+			if (!url.StartsWith("http://") && !url.StartsWith("https://"))
 				return;
 
-			if (!url.EndsWith("ogg") && !url.EndsWith("wav"))
+			if (!url.EndsWith(".ogg") && !url.EndsWith(".wav"))
 				return;
 
 			_queuedAudio.Enqueue(new StreamableAudio(url, playbackId, isStream, autoStart));
