@@ -176,16 +176,11 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!Channel.checkServer(sender))
 				return;
 
-			var audio = GetAudio(playbackId);
-			if (audio == null)
-				return;
-
 			var player = Provider.clients.FirstOrDefault(c => c.playerID.steamID == target);
 			if (player == null)
 				return;
 
-			audio.transform.SetParent(player.player.transform, false);
-			audio.transform.localPosition = Vector3.zero;
+			GetAudio(playbackId)?.AttachTo(player.player.transform);
 		}
 
 		/// <summary>
@@ -216,16 +211,11 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!Channel.checkServer(sender))
 				return;
 
-			var audio = GetAudio(playbackId);
-			if (audio == null)
-				return;
-
 			var veh = VehicleManager.vehicles.FirstOrDefault(c => c.instanceID == vehId);
 			if (veh == null)
 				return;
 
-			audio.transform.SetParent(veh.transform, false);
-			audio.transform.localPosition = Vector3.zero;
+			GetAudio(playbackId)?.AttachTo(veh.transform);
 		}
 
 		/// <summary>
@@ -255,11 +245,7 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!Channel.checkServer(sender))
 				return;
 
-			var audio = GetAudio(playbackId);
-			if (audio == null)
-				return;
-
-			audio.transform.SetParent(null);
+			GetAudio(playbackId)?.Deattach();
 		}
 
 		/// <summary>
@@ -290,15 +276,7 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!Channel.checkServer(sender))
 				return;
 
-			var audio = GetAudio(playbackId);
-			if (audio == null)
-				return;
-
-			var transf = audio.transform;
-			if (transf.parent != null)
-				transf.localPosition = pos;
-			else
-				transf.position = pos;
+			GetAudio(playbackId)?.SetPosition(pos);
 		}
 
 		/// <summary>
@@ -564,7 +542,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="mute">Mute audio?</param>
-		public void SetMode(CSteamID target, AudioHandle handle, bool mute)
+		public void SetMute(CSteamID target, AudioHandle handle, bool mute)
 		{
 			channel.send(nameof(AudioSteamCall_SetMute), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, mute);
 		}
@@ -575,7 +553,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		/// <param name="target">The SteamCall target</param>
 		/// <param name="handle">The audio handle</param>
 		/// <param name="mute">Mute audio?</param>
-		public void SetMode(ESteamCall target, AudioHandle handle, bool mute)
+		public void SetMute(ESteamCall target, AudioHandle handle, bool mute)
 		{
 			channel.send(nameof(AudioSteamCall_SetMute), target, ESteamPacket.UPDATE_RELIABLE_BUFFER, (int)handle, mute);
 		}

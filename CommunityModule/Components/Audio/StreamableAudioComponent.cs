@@ -8,7 +8,7 @@ namespace SDG.Unturned.Community.Components.Audio
 		public StreamableAudio AudioInfo { get; private set; }
 		public bool IsPlaying => Audio.isPlaying;
 
-		public int Interval = 60;
+		public int Interval = 30;
 
 		private AudioClip _clip;
 		private bool _played;
@@ -49,25 +49,13 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		private void Update()
 		{
-			if (!AudioInfo.IsStream)
-			{
-				if (_played)
-					return;
-
-				_www = new WWW(AudioInfo.Url);
-				_clip = _www.GetAudioClip(false, AudioInfo.IsStream);
-				Audio.PlayOneShot(_clip);
-				_played = true;
-				return;
-			}
-
 			_timer = _timer + 1 * Time.deltaTime; //Mathf.FloorToInt(Time.timeSinceLevelLoad*10); 
 												  //Time.frameCount; 
 			if (string.IsNullOrEmpty(AudioInfo.Url))
 				return;
 
-			if (_timer >= Interval)
-			{             //if(timer%interval == 0){
+			if (_timer >= Interval && AudioInfo.IsStream)
+			{        
 				if (_www != null)
 				{
 					_www.Dispose();
@@ -75,19 +63,18 @@ namespace SDG.Unturned.Community.Components.Audio
 					_played = false;
 					_timer = 0;
 				}
+				return;
 			}
-			else
+
+			if (_www == null)
 			{
-				if (_www == null)
-				{
-					_www = new WWW(AudioInfo.Url);
-				}
+				_www = new WWW(AudioInfo.Url);
 			}
 			if (_clip == null)
 			{
 				if (_www != null)
 				{
-					_clip = _www.GetAudioClip(false, AudioInfo.IsStream);
+					_clip = _www.GetAudioClip(false, true);
 				}
 			}
 
@@ -123,7 +110,7 @@ namespace SDG.Unturned.Community.Components.Audio
 
 		public void SetMode(AudioMode mode)
 		{
-			Audio.spatialBlend = mode == AudioMode.Positional3D ? 1f : 0f;
+			Audio.spatialBlend = mode == AudioMode.Positional ? 1f : 0f;
 		}
 
 		public void SetSpatialBlend(float blend)
@@ -149,6 +136,25 @@ namespace SDG.Unturned.Community.Components.Audio
 		public void SetRolloffMode(AudioRolloffMode mode)
 		{
 			Audio.rolloffMode = mode;
+		}
+
+		public void AttachTo(Transform targetTransform)
+		{
+			transform.SetParent(targetTransform, false);
+			transform.localPosition = Vector3.zero;
+		}
+
+		public void Deattach()
+		{
+			transform.SetParent(null);
+		}
+
+		public void SetPosition(Vector3 pos)
+		{
+			if (transform.parent != null)
+				transform.localPosition = pos;
+			else
+				transform.position = pos;
 		}
 	}
 }
