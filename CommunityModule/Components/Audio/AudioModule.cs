@@ -107,6 +107,9 @@ namespace SDG.Unturned.Community.Components.Audio
 			if (!Channel.checkServer(sender))
 				return;
 
+			if (isStream)
+				return; //todo: streaming is broken
+
 			if (!CanPlayAudio(playbackId, isStream))
 				return;
 
