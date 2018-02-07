@@ -26,7 +26,7 @@ namespace SDG.Unturned.Community.Components.Audio
 			audioSource.loop = false;
 			audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
 			audioSource.priority = 0;
-			audioSource.spatialBlend = 1f;
+			audioSource.spatialBlend = 0f;
 
 			StreamableAudioComponent comp = o.AddComponent<StreamableAudioComponent>();
 			comp.AudioInfo = audioInfo;
