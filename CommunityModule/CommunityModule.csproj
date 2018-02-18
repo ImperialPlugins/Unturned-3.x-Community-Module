@@ -45,7 +45,14 @@
     </Win32Resource>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Audio\AudioHandle.cs" />
+    <Compile Include="Components\Audio\AudioMode.cs" />
+    <Compile Include="Components\Audio\AudioModule.cs" />
     <Compile Include="CommunityNexus.cs" />
+    <Compile Include="Components\Audio\StreamableAudio.cs" />
+    <Compile Include="Components\Audio\StreamableAudioComponent.cs" />
+    <Compile Include="Components\SingletonModuleComponent.cs" />
+    <Compile Include="Components\PlayerModuleComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -68,6 +75,7 @@
       <Name>Harmony</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /s /y "$(ProjectDir)module-files" "$(ProjectDir)$(OutDir)"</PostBuildEvent>
