@@ -59,7 +59,7 @@ namespace SDG.Unturned.Community
 
 			Object.Destroy(_moduleComponentsObject);
 
-			Debug.Log("Community Module Shutdown completed");
+			Debug.Log("Community Module has been unloaded");
 			Instance = null;
 		}
 	}
